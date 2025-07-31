@@ -4,16 +4,14 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files from subdirectory
-COPY M7Rnetworking/server/package*.json ./server/
-COPY M7Rnetworking/package*.json ./
+# Copy the entire M7Rnetworking directory
+COPY M7Rnetworking/ ./
 
-# Install dependencies
-RUN cd server && npm ci --only=production
+# Install root dependencies first
+RUN npm install
 
-# Copy application code from subdirectory
-COPY M7Rnetworking/server/ ./server/
-COPY M7Rnetworking/client/ ./client/
+# Install server dependencies
+RUN cd server && npm install
 
 # Expose port
 EXPOSE 5000
@@ -22,4 +20,4 @@ EXPOSE 5000
 ENV NODE_ENV=production
 
 # Start the application
-CMD ["node", "server/index.js"]
+CMD ["npm", "start"]
